@@ -37,7 +37,7 @@ sub process_variation_data {
 
     # my $tmpdir = File::Temp->newdir();
     # my $tmpdir = File::Temp->newdir( CLEANUP => 0 );
-    my $tmpdir = "/var/tmp/oIGe_LLBbt";
+    my $tmpdir = "/scratch4/tmp/oIGe_LLBbt";
 
 	print "Localizing params to $tmpdir\n";
 	print "Params ", Dumper($params);
@@ -75,9 +75,9 @@ sub process_variation_data {
 
 sub run_mash {
 	my ($query) = @_;
-	my $mash = "/homes/brettin/local/app-runtime/minhash/bin/mash";
+	my $mash = "mash";
 	verify_cmd($mash);
-	my ($threads, $reference) = (2, "/homes/brettin/local/data/all.msh");
+	my ($threads, $reference) = (2, "/scratch2/mash/all.msh");
 	my $cmd = [$mash, "dist", "-p", $threads, $reference, $query];
 	my ($out, $err) = run_cmd($cmd, 1);
 	print $out;
@@ -117,9 +117,10 @@ sub run_cmd {
     return ($out, $err);
 }
 
-# the purpose of this sub is to
+# the purpose of this sub is to localize data from the workspace to localhost
 sub localize_params {
     my ($tmpdir, $params) = @_;
+    die "tmpdir $tmpdir does not exist" unless -e $tmpdir;
 	$params->{read} = get_ws_file($tmpdir, $params->{read});
     return $params;
 }
@@ -145,14 +146,16 @@ sub get_ws_file {
     my $fh;
     open($fh, ">", $file) or die "Cannot open $file for writing: $!";
 
+print $fh "test";
+
     print STDERR "GET WS => $tmpdir $base $id\n";
-    print STDERR "ws = $ws\n";
+    print STDERR "ws = $ws and is type ", ref($ws), "and can ", $ws->can("copy_files_to_handles"), "\n";
     print STDERR "token = ", Dumper ($token), "\n";
     system("ls -la $tmpdir");
 
     eval {
     print "calling ws->copy_files_to_handles\n";
-	# $ws->copy_files_to_handles(1, $token, [[$id, $fh]]);
+	$ws->copy_files_to_handles(1, $token, [[$id, $fh]]);
     print "done calling ws-copy_files_to_handles\n";
     };
     if ($@)
