@@ -1,0 +1,53 @@
+{
+    "id":"GeneExtracter",
+    "script":"App-GeneExtracter",
+    "label":"Gene retreival from metagenomes",
+    "description":"Extract assembled genes from a metagenome",
+    "parameters":[
+        {
+            "id": "gene_ids",
+            "allow_multiple": true,
+            "required": 0,
+            "default": null,
+            "label": "Gene IDs",
+            "desc": "Gene IDs",
+            "type": "string"
+        },
+        {
+            "id": "user_genes",
+            "allow_multiple": true,
+	          "required": 0,
+	          "default": null,
+	          "label": "Gene nucleotide sequence files",
+	          "desc": "Gene nucleotide sequence files in FASTA",
+	          "wstype": "feature_nucleotide_fasta",
+	          "type":"wstype"
+        },
+         {
+            "id": "user_feature_groups",
+            "allow_multiple": true,
+            "required": 0,
+            "default": null,
+            "label": "User feature groups",
+            "desc": "User feature groups",
+            "wstype": "feature_group",
+            "type":"wstype"
+        },
+        {
+            "id":"output_path",
+            "label":"Output Folder",
+            "required": 1,
+            "default":null,
+            "desc":"Path to which the output will be written. Defaults to the directory containing the input data. ",
+            "type":"folder"
+        },
+        {
+            "id":"output_file",
+            "label":"File Basename",
+            "required": 1,
+            "default":null,
+            "desc":"Basename for the generated output files. Defaults to the basename of the input data.",
+            "type":"wsid"
+        }
+    ]
+}
